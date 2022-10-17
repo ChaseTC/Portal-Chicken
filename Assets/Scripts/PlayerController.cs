@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
 
     private ChickenManager cm;
 
+    public static int EggCount { get; set; } = 0;
+
     [SerializeField] private float moveSpeed = 7;
     [SerializeField] private float jumpForce = 20;
     [SerializeField] private float shootPower = 5;
@@ -73,41 +75,45 @@ public class PlayerController : MonoBehaviour
     }
     private void HandleShooting()
     {
-        if (isAiming)
+        if (EggCount > 0)
         {
-            lr.enabled = true;
-            Vector2 velocity = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position) * shootPower;
-            if (velocity.x > maxEggXVelocity)
+            if (isAiming)
             {
-                velocity.x = maxEggXVelocity;
-            }
-            if (velocity.y > maxEggYVelocity)
-            {
-                velocity.y = maxEggYVelocity;
-            }
-            List<Vector3> trajectory = GetTrajectory(eggrb, transform.position, velocity, 500, 5);
-            lr.positionCount = trajectory.Count;
-            lr.SetPositions(trajectory.ToArray());
+                lr.enabled = true;
+                Vector2 velocity = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position) * shootPower;
+                if (velocity.x > maxEggXVelocity)
+                {
+                    velocity.x = maxEggXVelocity;
+                }
+                if (velocity.y > maxEggYVelocity)
+                {
+                    velocity.y = maxEggYVelocity;
+                }
+                List<Vector3> trajectory = GetTrajectory(eggrb, transform.position, velocity, 500, 5);
+                lr.positionCount = trajectory.Count;
+                lr.SetPositions(trajectory.ToArray());
 
-            if (Input.GetButtonDown("Fire1"))
-            {
-                GameObject egg = Instantiate(eggPrefab, transform.position, Quaternion.identity);
-                egg.GetComponent<EggController>().ChickenNumber = cm.ChickenNumber + 1;
-                egg.GetComponent<Rigidbody2D>().velocity = velocity;
-                rb.bodyType = RigidbodyType2D.Static;
-                lr.enabled = false;
-                isAiming = false;
-                GetComponent<PlayerController>().enabled = false;
+                if (Input.GetButtonDown("Fire1"))
+                {
+                    EggCount -= 1;
+                    GameObject egg = Instantiate(eggPrefab, transform.position, Quaternion.identity);
+                    egg.GetComponent<EggController>().ChickenNumber = cm.ChickenNumber + 1;
+                    egg.GetComponent<Rigidbody2D>().velocity = velocity;
+                    rb.bodyType = RigidbodyType2D.Static;
+                    lr.enabled = false;
+                    isAiming = false;
+                    GetComponent<PlayerController>().enabled = false;
+                }
+                if (Input.GetButtonDown("Fire2"))
+                {
+                    isAiming = false;
+                    lr.enabled = false;
+                }
             }
-            if (Input.GetButtonDown("Fire2"))
+            if (!isAiming && Input.GetButtonDown("Fire1"))
             {
-                isAiming = false;
-                lr.enabled = false;
+                isAiming = true;
             }
-        }
-        if (!isAiming && Input.GetButtonDown("Fire1"))
-        {
-            isAiming = true;
         }
     }
 

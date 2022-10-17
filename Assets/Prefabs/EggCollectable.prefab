@@ -10,12 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1482328119854964986}
   - component: {fileID: 2796194663749548060}
-  - component: {fileID: 5871134407850659718}
   - component: {fileID: 9095768634627476514}
-  - component: {fileID: 4056021081302378015}
-  m_Layer: 6
-  m_Name: Egg
-  m_TagString: egg
+  - component: {fileID: -5333349018332465750}
+  m_Layer: 0
+  m_Name: EggCollectable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -87,27 +86,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!50 &5871134407850659718
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5383353250566454555}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 4
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!58 &9095768634627476514
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -121,10 +99,10 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.0032119146}
   serializedVersion: 2
-  m_Radius: 0.5
---- !u!114 &4056021081302378015
+  m_Radius: 0.7323196
+--- !u!114 &-5333349018332465750
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -133,7 +111,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 5383353250566454555}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b378cc1e72cc30446bb548cc24ce1715, type: 3}
+  m_Script: {fileID: 11500000, guid: 2fe1f3e2f3f4a004f82217727b642391, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 8886587586276959843, guid: 213b21f7159171b4aa3bc873bfbeea3a, type: 3}
