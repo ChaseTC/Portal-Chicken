@@ -1,32 +1,55 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EggController : MonoBehaviour
 {
-    public static event Delegates.SignalCamera signalCamera;
-    public static event Delegates.ChickenUpdate ChickenUpdate;
-
-    public int ChickenNumber {get; set;}
+    public int ChickenNumber { get; set; }
 
     [SerializeField] private GameObject playerPrefab;
+    private Rigidbody2D rb;
 
     private void Start()
     {
-        if (signalCamera != null)
+        EventManager.TriggerSignalCamera(transform);
+        rb = GetComponent<Rigidbody2D>();
+    }
+
+    private void Update()
+    {
+        transform.up = new Vector3(rb.velocity.x, rb.velocity.y, transform.up.z);
+        if (Input.GetKeyDown("f"))
         {
-            signalCamera(transform);
+            DestroyEgg();
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "nest")
+        string tag = collision.gameObject.tag;
+        if (tag == "nest")
         {
-            GameObject player =Instantiate(playerPrefab, transform.position, Quaternion.identity);
+            GameObject player = Instantiate(playerPrefab, transform.position, Quaternion.identity);
             player.GetComponent<ChickenManager>().ChickenNumber = ChickenNumber;
-            if (ChickenNumber >= ChickenManager.maxChickens && ChickenUpdate != null)
+            if (ChickenNumber >= ChickenManager.maxChickens)
             {
-                ChickenUpdate(ChickenManager.ChickenUpdate.KillOldest);
+                EventManager.TriggerChickenUpdate(EventManager.ChickenUpdateType.KillOldest, 0);
             }
+            Destroy(gameObject);
+        }
+        if (tag == "road")
+        {
+            DestroyEgg();
+        }
+    }
+
+    private void DestroyEgg()
+    {   
+        if (ChickenNumber == 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+        else {
+            EventManager.TriggerChickenUpdate(EventManager.ChickenUpdateType.ChickenDied, ChickenNumber);
             Destroy(gameObject);
         }
     }

@@ -3,11 +3,11 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private Camera cam;
-    [SerializeField] private float maxZoom = 5;
+    [SerializeField] private float maxZoom = 10;
     [SerializeField] private float minZoom = 20;
     [SerializeField] private float zoomSensitivity = 1;
 
-    [SerializeField] private float moveSensitivity = 0.5f;
+    [SerializeField] private float moveSensitivity = 1f;
     [SerializeField] private float speed = 30;
     private float targetZoom;
     private Transform following;
@@ -16,14 +16,12 @@ public class CameraController : MonoBehaviour
 
     private void OnEnable()
     {
-        PlayerController.signalCamera += SetFollowing;
-        EggController.signalCamera += SetFollowing;
+        EventManager.signalCamera += SetFollowing;
     }
 
     private void OnDisable()
     {
-        PlayerController.signalCamera -= SetFollowing;
-        EggController.signalCamera += SetFollowing;
+        EventManager.signalCamera -= SetFollowing;
     }
 
     private void Start()
@@ -71,7 +69,7 @@ public class CameraController : MonoBehaviour
         }
         else
         {
-            
+
             transform.position = new Vector3(transform.position.x + Input.GetAxis("Mouse X") * moveSensitivity, transform.position.y + Input.GetAxis("Mouse Y") * moveSensitivity, transform.position.z);
         }
 

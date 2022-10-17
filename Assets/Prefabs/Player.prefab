@@ -247,9 +247,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c777c141014f55342905049702445068, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2
-  jumpForce: 10
+  moveSpeed: 7
+  jumpForce: 20
   shootPower: 5
+  maxEggXVelocity: 15
+  maxEggYVelocity: 30
   eggPrefab: {fileID: 5383353250566454555, guid: a269421c5a579994d8e5154cc0b40fb8, type: 3}
   terrain:
     serializedVersion: 2

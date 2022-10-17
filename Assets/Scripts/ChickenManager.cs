@@ -2,29 +2,22 @@ using UnityEngine;
 
 public class ChickenManager : MonoBehaviour
 {
-    public enum ChickenUpdate
-    {
-        NewestDied,
-        KillOldest
-    }
     public static readonly int maxChickens = 2;
-    public int ChickenNumber {get; set;} = 0;
+    public int ChickenNumber { get; set; } = 0;
 
     private void OnEnable()
     {
-        PlayerController.ChickenUpdate += HandleChickenUpdate;
-        EggController.ChickenUpdate += HandleChickenUpdate;
+        EventManager.chickenUpdate += HandleChickenUpdate;
     }
 
     private void OnDisable()
     {
-        PlayerController.ChickenUpdate -= HandleChickenUpdate;
-        EggController.ChickenUpdate -= HandleChickenUpdate;
+        EventManager.chickenUpdate -= HandleChickenUpdate;
     }
 
-    private void HandleChickenUpdate(ChickenUpdate u)
+    private void HandleChickenUpdate(EventManager.ChickenUpdateType u, int chickenNumber)
     {
-        if (u == ChickenUpdate.KillOldest)
+        if (u == EventManager.ChickenUpdateType.KillOldest)
         {
             ChickenNumber -= 1;
             if (ChickenNumber < 0)
@@ -32,9 +25,9 @@ public class ChickenManager : MonoBehaviour
                 Destroy(gameObject);
             }
         }
-        else if (u == ChickenUpdate.NewestDied)
+        else if (u == EventManager.ChickenUpdateType.ChickenDied)
         {
-            if (ChickenNumber == 0)
+            if (ChickenNumber == chickenNumber - 1)
             {
                 GetComponent<PlayerController>().enabled = true;
                 GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;

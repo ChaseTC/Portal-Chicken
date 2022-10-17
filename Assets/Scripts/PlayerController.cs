@@ -3,9 +3,6 @@ using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
-    public static event Delegates.SignalCamera signalCamera;
-    public static event Delegates.ChickenUpdate ChickenUpdate;
-
     private Rigidbody2D rb;
     private Rigidbody2D eggrb;
     private LineRenderer lr;
@@ -13,9 +10,12 @@ public class PlayerController : MonoBehaviour
 
     private ChickenManager cm;
 
-    [SerializeField] private float moveSpeed = 10;
-    [SerializeField] private float jumpForce = 40;
+    [SerializeField] private float moveSpeed = 7;
+    [SerializeField] private float jumpForce = 20;
     [SerializeField] private float shootPower = 5;
+
+    [SerializeField] private float maxEggXVelocity = 15;
+    [SerializeField] private float maxEggYVelocity = 30;
 
     [SerializeField] private GameObject eggPrefab;
 
@@ -31,17 +31,11 @@ public class PlayerController : MonoBehaviour
         lr.enabled = false;
         coll = GetComponent<BoxCollider2D>();
         cm = GetComponent<ChickenManager>();
-        if (signalCamera != null)
-        {
-            signalCamera(transform);
-        }
+        EventManager.TriggerSignalCamera(transform);
     }
     private void OnEnable()
     {
-        if (signalCamera != null)
-        {
-            signalCamera(transform);
-        }
+        EventManager.TriggerSignalCamera(transform);
         isAiming = false;
     }
 
@@ -83,7 +77,15 @@ public class PlayerController : MonoBehaviour
         {
             lr.enabled = true;
             Vector2 velocity = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position) * shootPower;
-            List<Vector3> trajectory = GetTrajectory(eggrb, transform.position, velocity, 500, 10);
+            if (velocity.x > maxEggXVelocity)
+            {
+                velocity.x = maxEggXVelocity;
+            }
+            if (velocity.y > maxEggYVelocity)
+            {
+                velocity.y = maxEggYVelocity;
+            }
+            List<Vector3> trajectory = GetTrajectory(eggrb, transform.position, velocity, 500, 5);
             lr.positionCount = trajectory.Count;
             lr.SetPositions(trajectory.ToArray());
 
@@ -113,9 +115,9 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown("f"))
         {
-            if (cm.ChickenNumber != 0 && ChickenUpdate != null)
+            if (cm.ChickenNumber != 0)
             {
-                ChickenUpdate(ChickenManager.ChickenUpdate.NewestDied);
+                EventManager.TriggerChickenUpdate(EventManager.ChickenUpdateType.ChickenDied, cm.ChickenNumber);
                 Destroy(gameObject);
             }
         }
@@ -136,14 +138,15 @@ public class PlayerController : MonoBehaviour
         Vector2 moveStep = velocity * timestep;
 
         results.Add(pos);
-        for (int i = 1; i < steps/stepsize + 1; ++i)
+        for (int i = 1; i < steps / stepsize + 1; ++i)
         {
             moveStep += gravityAccel;
             moveStep *= drag;
             pos += moveStep;
-            RaycastHit2D hit = Physics2D.Raycast(results[i-1], pos, moveStep.magnitude, terrain);
+            RaycastHit2D hit = Physics2D.Raycast(results[i - 1], pos, moveStep.magnitude, terrain);
             results.Add(pos);
-            if (hit.collider != null) {
+            if (hit.collider != null)
+            {
                 break;
             }
         }
@@ -151,7 +154,8 @@ public class PlayerController : MonoBehaviour
         return results;
     }
 
-    public void SetChickenNumber(int n) {
+    public void SetChickenNumber(int n)
+    {
         cm.ChickenNumber = n;
     }
 }
