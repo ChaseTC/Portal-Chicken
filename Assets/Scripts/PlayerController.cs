@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb;
+    private Animator anim;
     private Rigidbody2D eggrb;
     private LineRenderer lr;
     private BoxCollider2D coll;
@@ -28,6 +29,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
         eggrb = eggPrefab.GetComponent<Rigidbody2D>();
         lr = GetComponent<LineRenderer>();
         lr.enabled = false;
@@ -67,6 +69,21 @@ public class PlayerController : MonoBehaviour
     {
         float dirx = Input.GetAxisRaw("Horizontal");
         rb.velocity = new Vector2(dirx * moveSpeed, rb.velocity.y);
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (rb.velocity.x < 0) {
+            sr.flipX = true;
+        }
+        if (rb.velocity.x > 0)
+        {
+            sr.flipX = false;
+        }
+        if (rb.velocity.x != 0)
+        {
+            anim.SetInteger("State", 1);
+        }
+        else {
+            anim.SetInteger("State", 0);
+        }
 
         if (Input.GetButtonDown("Jump") && isGrounded())
         {
@@ -99,7 +116,6 @@ public class PlayerController : MonoBehaviour
                     GameObject egg = Instantiate(eggPrefab, transform.position, Quaternion.identity);
                     egg.GetComponent<EggController>().ChickenNumber = cm.ChickenNumber + 1;
                     egg.GetComponent<Rigidbody2D>().velocity = velocity;
-                    rb.bodyType = RigidbodyType2D.Static;
                     lr.enabled = false;
                     isAiming = false;
                     GetComponent<PlayerController>().enabled = false;
@@ -149,7 +165,7 @@ public class PlayerController : MonoBehaviour
             moveStep += gravityAccel;
             moveStep *= drag;
             pos += moveStep;
-            RaycastHit2D hit = Physics2D.Raycast(results[i - 1], pos, moveStep.magnitude, terrain);
+            RaycastHit2D hit = Physics2D.BoxCast(results[i - 1], new Vector2(0.3f, 0.3f), 0, pos.normalized, moveStep.magnitude, terrain);
             results.Add(pos);
             if (hit.collider != null)
             {
