@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
 
     private ChickenManager cm;
 
-    public static int EggCount { get; set; } = 0;
+    public static int EggCount { get; set; } = 100;
 
     [SerializeField] private float moveSpeed = 7;
     [SerializeField] private float jumpForce = 20;
