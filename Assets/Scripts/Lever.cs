@@ -21,7 +21,6 @@ public class Lever : MonoBehaviour
 
     private void Update()
     {
-       // Debug.Log(playerInRange);
         if (playerInRange && Input.GetKeyDown("e"))
         {
 
@@ -36,14 +35,12 @@ public class Lever : MonoBehaviour
         }
         if (col.gameObject.tag == "egg" && !playerInRange)
         {
-            Debug.Log("Here " + playerInRange);
             ToggleLever();
         }
     }
 
     private void OnTriggerExit2D(Collider2D col)
     {
-        Debug.Log("Triggered Exit: " + col.gameObject.name);
         if (col.gameObject.tag == "player")
         {
             playerInRange = false;
@@ -52,15 +49,15 @@ public class Lever : MonoBehaviour
 
     private void ToggleLever()
     {
-        Debug.Log("Called");
-        EventManager.TriggerWireSignal(frequency, color);
         isOn = !isOn;
         if (isOn)
         {
+            EventManager.Activate(frequency, color);
             sr.sprite = on;
         }
         else
         {
+            EventManager.Deactivate(frequency, color);
             sr.sprite = off;
         }
     }

@@ -3,15 +3,15 @@ using UnityEngine;
 
 public class Portal : MonoBehaviour
 {
-    
+
     private Animator anim;
     private SpriteRenderer sr;
 
 
     private static float cooldownTime = 1;
     private bool onCooldown = false;
-    [SerializeField] private bool isActive = false;
-    [SerializeField] private int frequency;
+    [SerializeField] private bool isActive = true;
+    [SerializeField] private int frequency = -1;
     [SerializeField] private Color color;
 
     private void Start()
@@ -25,40 +25,42 @@ public class Portal : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (frequency != - 1 && EventManager.isActive(frequency))
+        {
+            color = EventManager.GetColor(frequency);
+            sr.color = color;
+            isActive = true;
+        }
+        else if (frequency != - 1)
+        {
+            sr.color = Color.white;
+            isActive = false;
+        }
+        anim.SetBool("Active", isActive);
+    }
+
     private void OnEnable()
     {
-        EventManager.wireSignal += HandleWireSignal;
         EventManager.portalTeleport += HandlePortalTeleport;
     }
 
     private void OnDisable()
     {
-        EventManager.wireSignal -= HandleWireSignal;
         EventManager.portalTeleport -= HandlePortalTeleport;
     }
 
-    private void OnTriggerEnter2D(Collider2D col) {
+    private void OnTriggerEnter2D(Collider2D col)
+    {
         if (isActive && !onCooldown && col.gameObject.tag == "egg")
         {
             Vector2 eggVelocity = col.gameObject.GetComponent<Rigidbody2D>().velocity;
-            float angle =  Vector2.Angle(transform.right, eggVelocity);
+            float angle = Vector2.Angle(transform.right, eggVelocity);
             if (angle > 90)
             {
                 EventManager.TriggerPortalTeleport(gameObject.GetInstanceID(), color);
             }
-        }
-    }
-    private void toggleActive()
-    {
-        isActive = !isActive;
-        anim.SetBool("Active", isActive);
-        if (isActive)
-        {
-            sr.color = color;
-        }
-        else
-        {
-            sr.color = Color.white;
         }
     }
 
@@ -67,14 +69,6 @@ public class Portal : MonoBehaviour
         onCooldown = true;
         yield return new WaitForSeconds(cooldownTime);
         onCooldown = false;
-    }
-
-    private void HandleWireSignal(int f, Color c) {
-        if (f == frequency)
-        {
-            color = c;
-            toggleActive();
-        }
     }
 
     private void HandlePortalTeleport(int from, Color c)
@@ -98,8 +92,4 @@ public class Portal : MonoBehaviour
             StartCoroutine(Cooldown());
         }
     }
-
-    
-
-
 }

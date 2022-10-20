@@ -29,8 +29,8 @@ public class ChickenManager : MonoBehaviour
         {
             if (ChickenNumber == chickenNumber - 1)
             {
+                gameObject.tag = "player";
                 GetComponent<PlayerController>().enabled = true;
-                GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
             }
         }
     }

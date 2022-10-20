@@ -47,6 +47,7 @@ public class EggController : MonoBehaviour
         if (ChickenNumber == 0)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            EventManager.ResetActive();
         }
         else {
             EventManager.TriggerChickenUpdate(EventManager.ChickenUpdateType.ChickenDied, ChickenNumber);

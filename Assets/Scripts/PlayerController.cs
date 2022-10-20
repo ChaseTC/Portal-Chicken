@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject eggPrefab;
 
     [SerializeField] private LayerMask terrain;
+    [SerializeField] private LayerMask nest;
 
     private bool isAiming = false;
 
@@ -118,6 +119,7 @@ public class PlayerController : MonoBehaviour
                     egg.GetComponent<Rigidbody2D>().velocity = velocity;
                     lr.enabled = false;
                     isAiming = false;
+                    gameObject.tag = "old player";
                     GetComponent<PlayerController>().enabled = false;
                 }
                 if (Input.GetButtonDown("Fire2"))
@@ -147,7 +149,7 @@ public class PlayerController : MonoBehaviour
 
     private bool isGrounded()
     {
-        return Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0, Vector2.down, .1f, terrain);
+        return Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0, Vector2.down, .1f, nest);
     }
 
     private List<Vector3> GetTrajectory(Rigidbody2D rigidbody, Vector2 pos, Vector2 velocity, int steps, int stepsize)
@@ -165,7 +167,7 @@ public class PlayerController : MonoBehaviour
             moveStep += gravityAccel;
             moveStep *= drag;
             pos += moveStep;
-            RaycastHit2D hit = Physics2D.BoxCast(results[i - 1], new Vector2(0.3f, 0.3f), 0, pos.normalized, moveStep.magnitude, terrain);
+            RaycastHit2D hit = Physics2D.BoxCast(results[i - 1], new Vector2(0.3f, 0.3f), 0, pos.normalized, moveStep.magnitude, terrain | nest);
             results.Add(pos);
             if (hit.collider != null)
             {
