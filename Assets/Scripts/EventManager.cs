@@ -13,7 +13,7 @@ public class EventManager
     public delegate void ChickenUpdate(EventManager.ChickenUpdateType u, int chickenNumber);
     public delegate void PortalTeleport(int from, Color color);
 
-    private static int MaxFrequencies = 10;
+    public static int MaxFrequencies {get; set;} = 10;
 
     private static List<Color>[] ActiveFrequencies = new List<Color>[MaxFrequencies];
 
