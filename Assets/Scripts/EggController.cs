@@ -48,7 +48,7 @@ public class EggController : MonoBehaviour
 
     private bool IsGrounded()
     {
-        return Physics2D.Raycast(coll.bounds.center, Vector2.down, 0.6f, nest);
+        return Physics2D.Raycast(coll.bounds.center, Vector2.down, coll.radius + 0.1f, nest);
     }
     private void DestroyEgg()
     {   

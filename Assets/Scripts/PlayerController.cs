@@ -103,9 +103,17 @@ public class PlayerController : MonoBehaviour
                 {
                     velocity.x = maxEggXVelocity;
                 }
+                if (velocity.x < -1 * maxEggXVelocity)
+                {
+                    velocity.x = -1 * maxEggXVelocity;
+                }
                 if (velocity.y > maxEggYVelocity)
                 {
                     velocity.y = maxEggYVelocity;
+                }
+                if (velocity.y < -1 * maxEggYVelocity)
+                {
+                    velocity.y = -1 * maxEggYVelocity;
                 }
                 List<Vector3> trajectory = GetTrajectory(eggrb, transform.position, velocity, 500, 5);
                 lr.positionCount = trajectory.Count;
