@@ -4,14 +4,17 @@ using UnityEngine.SceneManagement;
 public class EggController : MonoBehaviour
 {
     public int ChickenNumber { get; set; }
+    private CircleCollider2D coll;
 
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private LayerMask nest;
     private Rigidbody2D rb;
 
     private void Start()
     {
         EventManager.TriggerSignalCamera(transform);
         rb = GetComponent<Rigidbody2D>();
+        coll = GetComponent<CircleCollider2D>();
     }
 
     private void Update()
@@ -26,7 +29,8 @@ public class EggController : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         string tag = collision.gameObject.tag;
-        if (tag == "nest")
+        
+        if (tag == "nest" && IsGrounded())
         {
             GameObject player = Instantiate(playerPrefab, transform.position, Quaternion.identity);
             player.GetComponent<ChickenManager>().ChickenNumber = ChickenNumber;
@@ -42,6 +46,10 @@ public class EggController : MonoBehaviour
         }
     }
 
+    private bool IsGrounded()
+    {
+        return Physics2D.Raycast(coll.bounds.center, Vector2.down, 0.6f, nest);
+    }
     private void DestroyEgg()
     {   
         if (ChickenNumber == 0)

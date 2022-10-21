@@ -137,3 +137,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 8886587586276959843, guid: 213b21f7159171b4aa3bc873bfbeea3a, type: 3}
+  nest:
+    serializedVersion: 2
+    m_Bits: 256
