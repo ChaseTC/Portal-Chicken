@@ -5,6 +5,7 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb;
     private Animator anim;
+    private SpriteRenderer sr;
     private Rigidbody2D eggrb;
     private LineRenderer lr;
     private BoxCollider2D coll;
@@ -27,11 +28,15 @@ public class PlayerController : MonoBehaviour
 
     private bool isAiming = false;
 
+    private Vector2 velocity;
+
+    private enum state {idle, running, shooting};
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         eggrb = eggPrefab.GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
         lr = GetComponent<LineRenderer>();
         lr.enabled = false;
         coll = GetComponent<BoxCollider2D>();
@@ -70,8 +75,9 @@ public class PlayerController : MonoBehaviour
     {
         float dirx = Input.GetAxisRaw("Horizontal");
         rb.velocity = new Vector2(dirx * moveSpeed, rb.velocity.y);
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        if (rb.velocity.x < 0) {
+       
+        if (rb.velocity.x < 0)
+        {
             sr.flipX = true;
         }
         if (rb.velocity.x > 0)
@@ -80,10 +86,11 @@ public class PlayerController : MonoBehaviour
         }
         if (rb.velocity.x != 0)
         {
-            anim.SetInteger("State", 1);
+            anim.SetInteger("State", (int) state.running);
         }
-        else {
-            anim.SetInteger("State", 0);
+        else
+        {
+            anim.SetInteger("State", (int) state.idle);
         }
 
         if (Input.GetButtonDown("Jump") && isGrounded())
@@ -98,7 +105,7 @@ public class PlayerController : MonoBehaviour
             if (isAiming)
             {
                 lr.enabled = true;
-                Vector2 velocity = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position) * shootPower;
+                velocity = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position) * shootPower;
                 if (velocity.x > maxEggXVelocity)
                 {
                     velocity.x = maxEggXVelocity;
@@ -121,14 +128,8 @@ public class PlayerController : MonoBehaviour
 
                 if (Input.GetButtonDown("Fire1"))
                 {
-                    EggCount -= 1;
-                    GameObject egg = Instantiate(eggPrefab, transform.position, Quaternion.identity);
-                    egg.GetComponent<EggController>().ChickenNumber = cm.ChickenNumber + 1;
-                    egg.GetComponent<Rigidbody2D>().velocity = velocity;
-                    lr.enabled = false;
-                    isAiming = false;
-                    gameObject.tag = "old player";
-                    GetComponent<PlayerController>().enabled = false;
+                    sr.flipX = (velocity.x > 0);
+                    anim.SetInteger("State", (int) state.shooting);
                 }
                 if (Input.GetButtonDown("Fire2"))
                 {
@@ -143,16 +144,32 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void ShootEgg()
+    {
+        EggCount -= 1;
+        GameObject egg = Instantiate(eggPrefab, transform.position, Quaternion.identity);
+        egg.GetComponent<EggController>().ChickenNumber = cm.ChickenNumber + 1;
+        egg.GetComponent<Rigidbody2D>().velocity = velocity;
+        lr.enabled = false;
+        isAiming = false;
+        gameObject.tag = "old player";
+        GetComponent<PlayerController>().enabled = false;
+    }
     private void HandleKilling()
     {
         if (Input.GetKeyDown("f"))
         {
             if (cm.ChickenNumber != 0)
             {
-                EventManager.TriggerChickenUpdate(EventManager.ChickenUpdateType.ChickenDied, cm.ChickenNumber);
-                Destroy(gameObject);
+                anim.SetTrigger("DeathSignal");
             }
         }
+    }
+
+    private void KillAndSignal()
+    {
+        EventManager.TriggerChickenUpdate(EventManager.ChickenUpdateType.ChickenDied, cm.ChickenNumber);
+        Destroy(gameObject);
     }
 
     private bool isGrounded()

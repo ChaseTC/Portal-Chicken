@@ -22,7 +22,7 @@ public class ChickenManager : MonoBehaviour
             ChickenNumber -= 1;
             if (ChickenNumber < 0)
             {
-                Destroy(gameObject);
+                GetComponent<Animator>().SetTrigger("Death");
             }
         }
         else if (u == EventManager.ChickenUpdateType.ChickenDied)
@@ -33,6 +33,11 @@ public class ChickenManager : MonoBehaviour
                 GetComponent<PlayerController>().enabled = true;
             }
         }
+    }
+
+    private void Kill()
+    {
+        Destroy(gameObject);
     }
 
 }
