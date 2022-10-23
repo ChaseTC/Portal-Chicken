@@ -99,8 +99,8 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetButtonDown("Jump") && isGrounded())
         {
+            AudioSource.PlayClipAtPoint(jumpSoundEffect.clip, transform.position);
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-            jumpSoundEffect.Play();
         }
     }
     private void HandleShooting()
@@ -167,8 +167,8 @@ public class PlayerController : MonoBehaviour
         {
             if (cm.ChickenNumber != 0)
             {
+                AudioSource.PlayClipAtPoint(deathSoundEffect.clip, transform.position);
                 anim.SetTrigger("DeathSignal");
-                deathSoundEffect.Play();
             }
         }
     }

@@ -8,7 +8,7 @@ public class Collectable : MonoBehaviour
     {
         if (col.gameObject.tag == "player" || col.gameObject.tag == "egg")
         {
-            collectCrackSoundEffect.Play();
+            AudioSource.PlayClipAtPoint(collectCrackSoundEffect.clip, transform.position);
             PlayerController.EggCount += 1;
             Destroy(gameObject);
         }
