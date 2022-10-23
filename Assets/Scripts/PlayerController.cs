@@ -26,6 +26,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask terrain;
     [SerializeField] private LayerMask nest;
 
+    [SerializeField] private AudioSource jumpSoundEffect;
+    [SerializeField] private AudioSource shootSoundEffect;
+    [SerializeField] private AudioSource eggCrackSoundEffect;
+    [SerializeField] private AudioSource deathSoundEffect;
+
     private bool isAiming = false;
 
     private Vector2 velocity;
@@ -69,6 +74,7 @@ public class PlayerController : MonoBehaviour
             egg.GetComponent<EggController>().ChickenNumber = cm.ChickenNumber;
             egg.GetComponent<Rigidbody2D>().velocity = rb.velocity;
             Destroy(gameObject);
+            eggCrackSoundEffect.Play();
         }
     }
     private void HandleMovement()
@@ -96,6 +102,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Jump") && isGrounded())
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            jumpSoundEffect.Play();
         }
     }
     private void HandleShooting()
@@ -146,6 +153,7 @@ public class PlayerController : MonoBehaviour
 
     private void ShootEgg()
     {
+        shootSoundEffect.Play();
         EggCount -= 1;
         GameObject egg = Instantiate(eggPrefab, transform.position, Quaternion.identity);
         egg.GetComponent<EggController>().ChickenNumber = cm.ChickenNumber + 1;
@@ -162,6 +170,7 @@ public class PlayerController : MonoBehaviour
             if (cm.ChickenNumber != 0)
             {
                 anim.SetTrigger("DeathSignal");
+                deathSoundEffect.Play();
             }
         }
     }
