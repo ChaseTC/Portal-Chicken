@@ -28,7 +28,6 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private AudioSource jumpSoundEffect;
     [SerializeField] private AudioSource shootSoundEffect;
-    [SerializeField] private AudioSource eggCrackSoundEffect;
     [SerializeField] private AudioSource deathSoundEffect;
 
     private bool isAiming = false;
@@ -74,7 +73,6 @@ public class PlayerController : MonoBehaviour
             egg.GetComponent<EggController>().ChickenNumber = cm.ChickenNumber;
             egg.GetComponent<Rigidbody2D>().velocity = rb.velocity;
             Destroy(gameObject);
-            eggCrackSoundEffect.Play();
         }
     }
     private void HandleMovement()

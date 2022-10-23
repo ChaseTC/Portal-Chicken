@@ -8,6 +8,7 @@ public class EggController : MonoBehaviour
 
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private LayerMask nest;
+    [SerializeField] private AudioSource eggCrackSoundEffect;
     private Rigidbody2D rb;
     private Animator anim;
 
@@ -24,6 +25,7 @@ public class EggController : MonoBehaviour
         transform.up = new Vector3(rb.velocity.x, rb.velocity.y, transform.up.z);
         if (Input.GetKeyDown("f"))
         {
+            eggCrackSoundEffect.Play();
             rb.bodyType = RigidbodyType2D.Static;
             anim.SetTrigger("break");
         }
@@ -35,11 +37,13 @@ public class EggController : MonoBehaviour
 
         if (tag == "nest" && IsGrounded())
         {
+            eggCrackSoundEffect.Play();
             rb.bodyType = RigidbodyType2D.Static;
             anim.SetTrigger("hatch");
         }
         if (tag == "road")
         {
+            eggCrackSoundEffect.Play();
             rb.bodyType = RigidbodyType2D.Static;
             anim.SetTrigger("break");
         }
