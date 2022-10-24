@@ -12,6 +12,7 @@ public class Finish : MonoBehaviour
             // Finish Logic Here
             Debug.Log("Finished Level");
             finishSoundEffect.Play();
+            FindObjectOfType<GameManager>().EndGame();
         }
     }
 }
