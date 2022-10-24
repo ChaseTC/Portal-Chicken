@@ -12,4 +12,7 @@ The trajectory line is a modified combination of these 2 tutorials:
 The wire line renderer is a modified version of this tutorial:
 - https://youtu.be/5ZBynjAsfwI
 
+Camera zoom was implemented using the following tutorial:
+- https://gamedevbeginner.com/how-to-zoom-a-camera-in-unity-3-methods-with-examples/#two_d_zoom
+
 Everything else was implemented ourselves.
